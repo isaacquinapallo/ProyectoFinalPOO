@@ -1,5 +1,5 @@
 import javax.swing.*;
 
-public class Categoria {
+public class IngresoCajero {
     public JPanel mainPanel;
 }

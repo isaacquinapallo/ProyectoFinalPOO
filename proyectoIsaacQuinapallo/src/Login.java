@@ -40,14 +40,30 @@ public class Login {
                 Document user = collection.find(query).first();
 
                 if (user != null) {
-                    // Si la autenticación es exitosa, abrir la nueva ventana
-                    JFrame frameForm2 = new JFrame("Opciones");
-                    Categoria formInstance = new Categoria();
-                    frameForm2.setContentPane(formInstance.mainPanel);
-                    frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frameForm2.setSize(600, 400); // Tamaño razonable
-                    frameForm2.pack();
-                    frameForm2.setVisible(true);
+                    // Obtener el UserID del usuario autenticado como un entero
+                    Integer userID = user.getInteger("UserID");
+
+                    // Verificar si el UserID corresponde a un Admin (UserID == 1)
+                    // Correo: juan.perez@gmail.com    Contrasena: Contrasena123
+                    if (userID != null && userID == 1) {
+                        // Si el usuario es admin, abrir la ventana de administración
+                        JFrame frameForm2 = new JFrame("Opciones Admin");
+                        IngresoAdmin formInstance = new IngresoAdmin();
+                        frameForm2.setContentPane(formInstance.mainPanel);
+                        frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        frameForm2.setSize(600, 400); // Tamaño razonable
+                        frameForm2.pack();
+                        frameForm2.setVisible(true);
+                    } else {
+                        // Si el usuario no es admin, abrir la ventana de cajero
+                        JFrame frameForm2 = new JFrame("Opciones Cajero");
+                        IngresoCajero formInstance = new IngresoCajero();
+                        frameForm2.setContentPane(formInstance.mainPanel);
+                        frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        frameForm2.setSize(600, 400); // Tamaño razonable
+                        frameForm2.pack();
+                        frameForm2.setVisible(true);
+                    }
 
                     // Cerrar la ventana de login
                     SwingUtilities.getWindowAncestor(mainPanel).dispose();
