@@ -1,0 +1,6 @@
+UserID,Correo,Contrasena,Nombre,Apellido,Direccion,Telefono,FechaRegistro,UltimoInicioSesion
+1,juan.perez@gmail.com,Contrasena123,Juan,Perez,"Calle Falsa 123, Ciudad",555-1234,2024-07-24,2024-07-24
+2,ana.gomez@gmail.com,Contrasena456,Ana,Gomez,"Avenida Siempre Viva 742, Ciudad",555-5678,2024-07-23,2024-07-23
+3,maria.rodriguez@gmail.com,Contrasena789,Maria,Rodriguez,"Calle 456, Ciudad",555-8765,2024-07-22,2024-07-22
+4,pedro.sanchez@gmail.com,Contrasena012,Pedro,Sanchez,"Calle 789, Ciudad",555-4321,2024-07-21,2024-07-21
+5,sofia.castillo@gmail.com,Contrasena345,Sofia,Castillo,"Calle 101, Ciudad",555-3456,2024-07-20,2024-07-20
