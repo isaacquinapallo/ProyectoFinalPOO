@@ -26,7 +26,7 @@ public class Login {
         MongoDatabase database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
 
         // Acceder a una colección
-        collection = database.getCollection("datoszapatomart");
+        collection = database.getCollection("userslogin");
 
         // Configurar acción del botón de inicio de sesión
         loginButton.addActionListener(new ActionListener() {
@@ -35,8 +35,11 @@ public class Login {
                 String email = textField1.getText();
                 String password = new String(passwordField1.getPassword());
 
-                // Verificar el usuario
-                if (authenticateUser(email, password)) {
+                // Consultar la colección para encontrar el usuario con el correo y contraseña proporcionados
+                Document query = new Document("Correo", email).append("Contrasena", password);
+                Document user = collection.find(query).first();
+
+                if (user != null) {
                     // Si la autenticación es exitosa, abrir la nueva ventana
                     JFrame frameForm2 = new JFrame("Opciones");
                     Categoria formInstance = new Categoria();
@@ -59,14 +62,5 @@ public class Login {
 
         // Cerrar el cliente cuando se termine
         Runtime.getRuntime().addShutdownHook(new Thread(() -> mongoClient.close()));
-    }
-
-    private boolean authenticateUser(String email, String password) {
-        // Crear la consulta para verificar el correo y la contraseña
-        Document query = new Document("correo", email).append("contrasena", password);
-        Document user = collection.find(query).first();
-
-        // Retornar verdadero si el usuario fue encontrado, falso de lo contrario
-        return user != null;
     }
 }
