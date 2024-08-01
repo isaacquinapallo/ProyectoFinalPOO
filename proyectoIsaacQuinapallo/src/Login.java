@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,62 +14,73 @@ public class Login {
     private JTextField textField1;
     private JPasswordField passwordField1;
     private JButton loginButton;
-    private JLabel datosIncorrectos; // Etiqueta para mostrar errores
+    private JLabel datosIncorrectos;
+    private JPanel main;
 
     private MongoClient mongoClient;
     private MongoCollection<Document> collection;
 
+    // Panel Fondo
+    class FondoPanel extends JPanel {
+        private Image imagen;
+
+        public FondoPanel(Image imagen) {
+            this.imagen = imagen;
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (imagen != null) {
+                g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+
     public Login() {
-        // Crear un cliente MongoDB
+        // MongoDB
         mongoClient = MongoClients.create("mongodb://localhost:27017");
-
-        // Acceder a la base de datos
         MongoDatabase database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
-
-        // Acceder a una colección
         collection = database.getCollection("userslogin");
 
-        // Configurar acción del botón de inicio de sesión
+        // background
+        Image fondoImage = new ImageIcon(getClass().getResource("/imagenes/FondoLoginZapatos.PNG")).getImage();
+
+        FondoPanel fondoPanel = new FondoPanel(fondoImage);
+        fondoPanel.setLayout(new BorderLayout());
+        fondoPanel.add(mainPanel, BorderLayout.CENTER);
+
+        main.setOpaque(false);
+        main.setBackground(new Color(0, 0, 0, 0)); // Set background to fully transparent
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = textField1.getText();
                 String password = new String(passwordField1.getPassword());
-
-                // Consultar la colección para encontrar el usuario con el correo y contraseña proporcionados
+                // ana.gomez@gmail.com          Contrasena456
                 Document query = new Document("Correo", email).append("Contrasena", password);
                 Document user = collection.find(query).first();
 
                 if (user != null) {
-                    // Obtener el UserID del usuario autenticado como un entero
                     Integer userID = user.getInteger("UserID");
 
-                    // Verificar si el UserID corresponde a un Admin (UserID == 1)
-                    // Correo: juan.perez@gmail.com    Contrasena: Contrasena123
+                    JFrame frameForm2 = new JFrame(userID != null && userID == 1 ? "Opciones Admin" : "Opciones Cajero");
                     if (userID != null && userID == 1) {
-                        // Si el usuario es admin, abrir la ventana de administración
-                        JFrame frameForm2 = new JFrame("Opciones Admin");
                         IngresoAdmin formInstance = new IngresoAdmin();
                         frameForm2.setContentPane(formInstance.mainPanel);
-                        frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        frameForm2.setSize(600, 400); // Tamaño razonable
-                        frameForm2.pack();
-                        frameForm2.setVisible(true);
                     } else {
-                        // Si el usuario no es admin, abrir la ventana de cajero
-                        JFrame frameForm2 = new JFrame("Opciones Cajero");
-                        IngresoCajero formInstance = new IngresoCajero();
+                        CategoriasVendedor formInstance = new CategoriasVendedor();
                         frameForm2.setContentPane(formInstance.mainPanel);
-                        frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        frameForm2.setSize(600, 400); // Tamaño razonable
-                        frameForm2.pack();
-                        frameForm2.setVisible(true);
                     }
+                    frameForm2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frameForm2.setSize(600, 400);
+                    frameForm2.pack();
+                    frameForm2.setVisible(true);
 
-                    // Cerrar la ventana de login
                     SwingUtilities.getWindowAncestor(mainPanel).dispose();
                 } else {
-                    // Mostrar mensaje de error
                     datosIncorrectos.setText("Datos incorrectos, intente de nuevo");
                     textField1.setText("");
                     passwordField1.setText("");
@@ -76,7 +88,15 @@ public class Login {
             }
         });
 
-        // Cerrar el cliente cuando se termine
         Runtime.getRuntime().addShutdownHook(new Thread(() -> mongoClient.close()));
+    }
+
+    // Getter FondoPanel
+    public JPanel getFondoPanel() {
+        Image fondoImage = new ImageIcon(getClass().getResource("/imagenes/FondoLoginZapatos.PNG")).getImage();
+        FondoPanel fondoPanel = new FondoPanel(fondoImage);
+        fondoPanel.setLayout(new BorderLayout());
+        fondoPanel.add(main, BorderLayout.CENTER);
+        return fondoPanel;
     }
 }
