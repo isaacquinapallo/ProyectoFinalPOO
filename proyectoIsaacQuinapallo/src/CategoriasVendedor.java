@@ -96,9 +96,55 @@ public class CategoriasVendedor {
                 handleCategoryButtonClick("1I", tituloArticulo3, precio3, categoria3, marca3, img3);
             }
         });
+        //Funcion Boton 1
+        comprarButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtener el título del producto desde el JLabel
+                String titulo = tituloArticulo1.getText();
+
+                // Crear la instancia de CategoriaVendedor2
+                CategoriaVendedor2 formInstance = new CategoriaVendedor2(titulo);
+
+                // Configurar el JFrame
+                JFrame frameForm3 = new JFrame("Detalles del Producto");
+                frameForm3.setContentPane(formInstance.mainPanel);
+                frameForm3.pack();
+                frameForm3.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frameForm3.setVisible(true);
+            }
+        });
+        // Función para el Botón 2
+        comprarButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtener el texto del título del segundo producto
+                String tituloProducto = tituloArticulo2.getText();
+                // Crear y mostrar la ventana para CategoriaVendedor2 con el título del producto
+                JFrame frameForm3 = new JFrame();
+                CategoriaVendedor2 formInstance = new CategoriaVendedor2(tituloProducto);
+                frameForm3.setContentPane(formInstance.mainPanel);
+                frameForm3.pack();
+                frameForm3.setVisible(true);
+            }
+        });
+        // Función para el Botón 3
+        comprarButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtener el texto del título del tercer producto
+                String tituloProducto = tituloArticulo3.getText();
+                // Crear y mostrar la ventana para CategoriaVendedor2 con el título del producto
+                JFrame frameForm3 = new JFrame();
+                CategoriaVendedor2 formInstance = new CategoriaVendedor2(tituloProducto);
+                frameForm3.setContentPane(formInstance.mainPanel);
+                frameForm3.pack();
+                frameForm3.setVisible(true);
+            }
+        });
     }
 
-    //Cambiar esto de acuerdo a las tallas, Colores y Disponibilidad
+    //Titulo,Precio,Cateoria,Marca,Img
     private void configureProduct(String productId, JLabel titulo, JLabel precio, JLabel categoria, JLabel marca, JLabel img) {
         try {
             Document product = collection.find(new Document("ProductID", productId)).first();
