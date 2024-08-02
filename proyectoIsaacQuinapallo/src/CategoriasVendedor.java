@@ -19,19 +19,19 @@ public class CategoriasVendedor {
     private JLabel tituloArticulo1;
     private JLabel img1;
     private JLabel precio1;
-    private JLabel color1;
+    private JLabel categoria1;
     private JLabel marca1;
     private JButton comprarButton1;
     private JLabel tituloArticulo2;
     private JLabel img2;
     private JLabel precio2;
-    private JLabel color2;
+    private JLabel categoria2;
     private JLabel marca2;
     private JButton comprarButton2;
     private JLabel tituloArticulo3;
     private JLabel img3;
     private JLabel precio3;
-    private JLabel color3;
+    private JLabel categoria3;
     private JLabel marca3;
     private JButton comprarButton3;
     private static MongoDatabase database;
@@ -44,493 +44,108 @@ public class CategoriasVendedor {
             database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
             collection = database.getCollection("productos");
 
-            // Recuperar producto con ProductID 1A
-            Document product1 = collection.find(new Document("ProductID", "1A")).first();
-            if (product1 != null) {
-                String nombre1 = product1.getString("Nombre");
-                String marca1Value = product1.getString("Marca");
-                String color1Value = product1.getString("Color");
-                String urlImagen1 = product1.getString("URLImagen");
-                double precio1Value = product1.getDouble("Precio");
-
-                // Imprimir en la terminal para verificar
-                System.out.println("ProductID 1A:");
-                System.out.println("Nombre: " + nombre1);
-                System.out.println("Marca: " + marca1Value);
-                System.out.println("Color: " + color1Value);
-                System.out.println("URL Imagen: " + urlImagen1);
-                System.out.println("Precio: " + precio1Value);
-
-                // Configurar JLabel
-                tituloArticulo1.setText(nombre1);
-                precio1.setText("Precio: $" + String.format("%.2f", precio1Value));
-                color1.setText("Color: " + color1Value);
-                marca1.setText("Marca: " + marca1Value);
-
-                // Mostrar imagen
-                try {
-                    URL url1 = new URL(urlImagen1);
-                    Image image1 = ImageIO.read(url1);
-                    ImageIcon icon1 = new ImageIcon(image1.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                    img1.setIcon(icon1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("No se encontró el producto con ProductID 1A");
-            }
-
-            // Recuperar producto con ProductID 2A
-            Document product2 = collection.find(new Document("ProductID", "2A")).first();
-            if (product2 != null) {
-                String nombre2 = product2.getString("Nombre");
-                String marca2Value = product2.getString("Marca");
-                String color2Value = product2.getString("Color");
-                String urlImagen2 = product2.getString("URLImagen");
-                double precio2Value = product2.getDouble("Precio");
-
-                // Imprimir en la terminal para verificar
-                System.out.println("ProductID 2A:");
-                System.out.println("Nombre: " + nombre2);
-                System.out.println("Marca: " + marca2Value);
-                System.out.println("Color: " + color2Value);
-                System.out.println("URL Imagen: " + urlImagen2);
-                System.out.println("Precio: " + precio2Value);
-
-                // Configurar JLabel
-                tituloArticulo2.setText(nombre2);
-                precio2.setText("Precio: $" + String.format("%.2f", precio2Value));
-                color2.setText("Color: " + color2Value);
-                marca2.setText("Marca: " + marca2Value);
-
-                // Mostrar imagen
-                try {
-                    URL url2 = new URL(urlImagen2);
-                    Image image2 = ImageIO.read(url2);
-                    ImageIcon icon2 = new ImageIcon(image2.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                    img2.setIcon(icon2);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("No se encontró el producto con ProductID 2A");
-            }
-
-            // Recuperar producto con ProductID 3A
-            Document product3 = collection.find(new Document("ProductID", "3A")).first();
-            if (product3 != null) {
-                String nombre3 = product3.getString("Nombre");
-                String marca3Value = product3.getString("Marca");
-                String color3Value = product3.getString("Color");
-                String urlImagen3 = product3.getString("URLImagen");
-                double precio3Value = product3.getDouble("Precio");
-
-                // Imprimir en la terminal para verificar
-                System.out.println("ProductID 3A:");
-                System.out.println("Nombre: " + nombre3);
-                System.out.println("Marca: " + marca3Value);
-                System.out.println("Color: " + color3Value);
-                System.out.println("URL Imagen: " + urlImagen3);
-                System.out.println("Precio: " + precio3Value);
-
-                // Configurar JLabel
-                tituloArticulo3.setText(nombre3);
-                precio3.setText("Precio: $" + String.format("%.2f", precio3Value));
-                color3.setText("Color: " + color3Value);
-                marca3.setText("Marca: " + marca3Value);
-
-                // Mostrar imagen
-                try {
-                    URL url3 = new URL(urlImagen3);
-                    Image image3 = ImageIO.read(url3);
-                    ImageIcon icon3 = new ImageIcon(image3.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                    img3.setIcon(icon3);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("No se encontró el producto con ProductID 3A");
-            }
+            // Configurar productos
+            //Producto 1 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+            handleCategoryButtonClick("1A", tituloArticulo1, precio1, categoria1, marca1, img1);
+            //Producto 2 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+            handleCategoryButtonClick("1B", tituloArticulo2, precio2, categoria2, marca2, img2);
+            //Producto 3 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+            handleCategoryButtonClick("1C", tituloArticulo3, precio3, categoria3, marca3, img3);
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        //DEPORTIVOS
+        // DEPORTIVOS
         deportivoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    // Inicializar MongoDB
-                    var mongoClient = MongoClients.create("mongodb://localhost:27017");
-                    database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
-                    collection = database.getCollection("productos");
+                //Producto 1 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1A", tituloArticulo1, precio1, categoria1, marca1, img1);
+                //Producto 2 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1B", tituloArticulo2, precio2, categoria2, marca2, img2);
+                //Producto 3 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1C", tituloArticulo3, precio3, categoria3, marca3, img3);
 
-                    // Recuperar producto con ProductID 1A
-                    Document product1 = collection.find(new Document("ProductID", "1A")).first();
-                    if (product1 != null) {
-                        String nombre1 = product1.getString("Nombre");
-                        String marca1Value = product1.getString("Marca");
-                        String color1Value = product1.getString("Color");
-                        String urlImagen1 = product1.getString("URLImagen");
-                        double precio1Value = product1.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 1A:");
-                        System.out.println("Nombre: " + nombre1);
-                        System.out.println("Marca: " + marca1Value);
-                        System.out.println("Color: " + color1Value);
-                        System.out.println("URL Imagen: " + urlImagen1);
-                        System.out.println("Precio: " + precio1Value);
-
-                        // Configurar JLabel
-                        tituloArticulo1.setText(nombre1);
-                        precio1.setText("Precio: $" + String.format("%.2f", precio1Value));
-                        color1.setText("Color: " + color1Value);
-                        marca1.setText("Marca: " + marca1Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url1 = new URL(urlImagen1);
-                            Image image1 = ImageIO.read(url1);
-                            ImageIcon icon1 = new ImageIcon(image1.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img1.setIcon(icon1);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 1A");
-                    }
-
-                    // Recuperar producto con ProductID 2A
-                    Document product2 = collection.find(new Document("ProductID", "2A")).first();
-                    if (product2 != null) {
-                        String nombre2 = product2.getString("Nombre");
-                        String marca2Value = product2.getString("Marca");
-                        String color2Value = product2.getString("Color");
-                        String urlImagen2 = product2.getString("URLImagen");
-                        double precio2Value = product2.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 2A:");
-                        System.out.println("Nombre: " + nombre2);
-                        System.out.println("Marca: " + marca2Value);
-                        System.out.println("Color: " + color2Value);
-                        System.out.println("URL Imagen: " + urlImagen2);
-                        System.out.println("Precio: " + precio2Value);
-
-                        // Configurar JLabel
-                        tituloArticulo2.setText(nombre2);
-                        precio2.setText("Precio: $" + String.format("%.2f", precio2Value));
-                        color2.setText("Color: " + color2Value);
-                        marca2.setText("Marca: " + marca2Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url2 = new URL(urlImagen2);
-                            Image image2 = ImageIO.read(url2);
-                            ImageIcon icon2 = new ImageIcon(image2.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img2.setIcon(icon2);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 2A");
-                    }
-
-                    // Recuperar producto con ProductID 3A
-                    Document product3 = collection.find(new Document("ProductID", "3A")).first();
-                    if (product3 != null) {
-                        String nombre3 = product3.getString("Nombre");
-                        String marca3Value = product3.getString("Marca");
-                        String color3Value = product3.getString("Color");
-                        String urlImagen3 = product3.getString("URLImagen");
-                        double precio3Value = product3.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 3A:");
-                        System.out.println("Nombre: " + nombre3);
-                        System.out.println("Marca: " + marca3Value);
-                        System.out.println("Color: " + color3Value);
-                        System.out.println("URL Imagen: " + urlImagen3);
-                        System.out.println("Precio: " + precio3Value);
-
-                        // Configurar JLabel
-                        tituloArticulo3.setText(nombre3);
-                        precio3.setText("Precio: $" + String.format("%.2f", precio3Value));
-                        color3.setText("Color: " + color3Value);
-                        marca3.setText("Marca: " + marca3Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url3 = new URL(urlImagen3);
-                            Image image3 = ImageIO.read(url3);
-                            ImageIcon icon3 = new ImageIcon(image3.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img3.setIcon(icon3);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 3A");
-                    }
-
-                } catch (Exception u) {
-                    u.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + u.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         });
 
-        //CASUAL
+        // CASUAL
         casualButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    // Inicializar MongoDB
-                    var mongoClient = MongoClients.create("mongodb://localhost:27017");
-                    database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
-                    collection = database.getCollection("productos");
-
-                    // Recuperar producto con ProductID 1B
-                    Document product1 = collection.find(new Document("ProductID", "1B")).first();
-                    if (product1 != null) {
-                        String nombre1 = product1.getString("Nombre");
-                        String marca1Value = product1.getString("Marca");
-                        String color1Value = product1.getString("Color");
-                        String urlImagen1 = product1.getString("URLImagen");
-                        double precio1Value = product1.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 1B:");
-                        System.out.println("Nombre: " + nombre1);
-                        System.out.println("Marca: " + marca1Value);
-                        System.out.println("Color: " + color1Value);
-                        System.out.println("URL Imagen: " + urlImagen1);
-                        System.out.println("Precio: " + precio1Value);
-
-                        // Configurar JLabel
-                        tituloArticulo1.setText(nombre1);
-                        precio1.setText("Precio: $" + String.format("%.2f", precio1Value));
-                        color1.setText("Color: " + color1Value);
-                        marca1.setText("Marca: " + marca1Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url1 = new URL(urlImagen1);
-                            Image image1 = ImageIO.read(url1);
-                            ImageIcon icon1 = new ImageIcon(image1.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img1.setIcon(icon1);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 1B");
-                    }
-
-                    // Recuperar producto con ProductID 2B
-                    Document product2 = collection.find(new Document("ProductID", "2B")).first();
-                    if (product2 != null) {
-                        String nombre2 = product2.getString("Nombre");
-                        String marca2Value = product2.getString("Marca");
-                        String color2Value = product2.getString("Color");
-                        String urlImagen2 = product2.getString("URLImagen");
-                        double precio2Value = product2.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 2B:");
-                        System.out.println("Nombre: " + nombre2);
-                        System.out.println("Marca: " + marca2Value);
-                        System.out.println("Color: " + color2Value);
-                        System.out.println("URL Imagen: " + urlImagen2);
-                        System.out.println("Precio: " + precio2Value);
-
-                        // Configurar JLabel
-                        tituloArticulo2.setText(nombre2);
-                        precio2.setText("Precio: $" + String.format("%.2f", precio2Value));
-                        color2.setText("Color: " + color2Value);
-                        marca2.setText("Marca: " + marca2Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url2 = new URL(urlImagen2);
-                            Image image2 = ImageIO.read(url2);
-                            ImageIcon icon2 = new ImageIcon(image2.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img2.setIcon(icon2);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 2B");
-                    }
-
-                    // Recuperar producto con ProductID 3B
-                    Document product3 = collection.find(new Document("ProductID", "3B")).first();
-                    if (product3 != null) {
-                        String nombre3 = product3.getString("Nombre");
-                        String marca3Value = product3.getString("Marca");
-                        String color3Value = product3.getString("Color");
-                        String urlImagen3 = product3.getString("URLImagen");
-                        double precio3Value = product3.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 3B:");
-                        System.out.println("Nombre: " + nombre3);
-                        System.out.println("Marca: " + marca3Value);
-                        System.out.println("Color: " + color3Value);
-                        System.out.println("URL Imagen: " + urlImagen3);
-                        System.out.println("Precio: " + precio3Value);
-
-                        // Configurar JLabel
-                        tituloArticulo3.setText(nombre3);
-                        precio3.setText("Precio: $" + String.format("%.2f", precio3Value));
-                        color3.setText("Color: " + color3Value);
-                        marca3.setText("Marca: " + marca3Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url3 = new URL(urlImagen3);
-                            Image image3 = ImageIO.read(url3);
-                            ImageIcon icon3 = new ImageIcon(image3.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img3.setIcon(icon3);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 3B");
-                    }
-
-                } catch (Exception u) {
-                    u.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + u.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
+                //Producto 1 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1D", tituloArticulo1, precio1, categoria1, marca1, img1);
+                //Producto 2 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1E", tituloArticulo2, precio2, categoria2, marca2, img2);
+                //Producto 3 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1F", tituloArticulo3, precio3, categoria3, marca3, img3);
             }
         });
 
-        //FORMAL
+        // FORMAL
         formalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    // Inicializar MongoDB
-                    var mongoClient = MongoClients.create("mongodb://localhost:27017");
-                    database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
-                    collection = database.getCollection("productos");
-
-                    // Recuperar producto con ProductID 1C
-                    Document product1 = collection.find(new Document("ProductID", "1C")).first();
-                    if (product1 != null) {
-                        String nombre1 = product1.getString("Nombre");
-                        String marca1Value = product1.getString("Marca");
-                        String color1Value = product1.getString("Color");
-                        String urlImagen1 = product1.getString("URLImagen");
-                        double precio1Value = product1.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 1C:");
-                        System.out.println("Nombre: " + nombre1);
-                        System.out.println("Marca: " + marca1Value);
-                        System.out.println("Color: " + color1Value);
-                        System.out.println("URL Imagen: " + urlImagen1);
-                        System.out.println("Precio: " + precio1Value);
-
-                        // Configurar JLabel
-                        tituloArticulo1.setText(nombre1);
-                        precio1.setText("Precio: $" + String.format("%.2f", precio1Value));
-                        color1.setText("Color: " + color1Value);
-                        marca1.setText("Marca: " + marca1Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url1 = new URL(urlImagen1);
-                            Image image1 = ImageIO.read(url1);
-                            ImageIcon icon1 = new ImageIcon(image1.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img1.setIcon(icon1);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 1C");
-                    }
-
-                    // Recuperar producto con ProductID 2C
-                    Document product2 = collection.find(new Document("ProductID", "2C")).first();
-                    if (product2 != null) {
-                        String nombre2 = product2.getString("Nombre");
-                        String marca2Value = product2.getString("Marca");
-                        String color2Value = product2.getString("Color");
-                        String urlImagen2 = product2.getString("URLImagen");
-                        double precio2Value = product2.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 2C:");
-                        System.out.println("Nombre: " + nombre2);
-                        System.out.println("Marca: " + marca2Value);
-                        System.out.println("Color: " + color2Value);
-                        System.out.println("URL Imagen: " + urlImagen2);
-                        System.out.println("Precio: " + precio2Value);
-
-                        // Configurar JLabel
-                        tituloArticulo2.setText(nombre2);
-                        precio2.setText("Precio: $" + String.format("%.2f", precio2Value));
-                        color2.setText("Color: " + color2Value);
-                        marca2.setText("Marca: " + marca2Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url2 = new URL(urlImagen2);
-                            Image image2 = ImageIO.read(url2);
-                            ImageIcon icon2 = new ImageIcon(image2.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img2.setIcon(icon2);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 2C");
-                    }
-
-                    // Recuperar producto con ProductID 3C
-                    Document product3 = collection.find(new Document("ProductID", "3C")).first();
-                    if (product3 != null) {
-                        String nombre3 = product3.getString("Nombre");
-                        String marca3Value = product3.getString("Marca");
-                        String color3Value = product3.getString("Color");
-                        String urlImagen3 = product3.getString("URLImagen");
-                        double precio3Value = product3.getDouble("Precio");
-
-                        // Imprimir en la terminal para verificar
-                        System.out.println("ProductID 3C:");
-                        System.out.println("Nombre: " + nombre3);
-                        System.out.println("Marca: " + marca3Value);
-                        System.out.println("Color: " + color3Value);
-                        System.out.println("URL Imagen: " + urlImagen3);
-                        System.out.println("Precio: " + precio3Value);
-
-                        // Configurar JLabel
-                        tituloArticulo3.setText(nombre3);
-                        precio3.setText("Precio: $" + String.format("%.2f", precio3Value));
-                        color3.setText("Color: " + color3Value);
-                        marca3.setText("Marca: " + marca3Value);
-
-                        // Mostrar imagen
-                        try {
-                            URL url3 = new URL(urlImagen3);
-                            Image image3 = ImageIO.read(url3);
-                            ImageIcon icon3 = new ImageIcon(image3.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-                            img3.setIcon(icon3);
-                        } catch (IOException u) {
-                            u.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No se encontró el producto con ProductID 3C");
-                    }
-
-                } catch (Exception u) {
-                    u.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + u.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                //Producto 1 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1G", tituloArticulo1, precio1, categoria1, marca1, img1);
+                //Producto 2 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1H", tituloArticulo2, precio2, categoria2, marca2, img2);
+                //Producto 3 (Nombre,Marca,Precio,Categoria,Tamano,Color,Inventario,URLImagen,Calificacion)
+                handleCategoryButtonClick("1I", tituloArticulo3, precio3, categoria3, marca3, img3);
             }
         });
+    }
+
+    //Cambiar esto de acuerdo a las tallas, Colores y Disponibilidad
+    private void configureProduct(String productId, JLabel titulo, JLabel precio, JLabel categoria, JLabel marca, JLabel img) {
+        try {
+            Document product = collection.find(new Document("ProductID", productId)).first();
+            if (product != null) {
+                String nombre = product.getString("Nombre");
+                String marcaValue = product.getString("Marca");
+                String categoriaValue = product.getString("Categoria");
+                String urlImagen = product.getString("URLImagen");
+                double precioValue = product.getDouble("Precio");
+
+                // Imprimir en la terminal para verificar
+                System.out.println("ProductID " + productId + ":");
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Marca: " + marcaValue);
+                System.out.println("Categoria: " + categoriaValue);
+                System.out.println("URL Imagen: " + urlImagen);
+                System.out.println("Precio: " + precioValue);
+
+                // Configurar JLabel
+                titulo.setText(nombre);
+                precio.setText("Precio: $" + String.format("%.2f", precioValue));
+                categoria.setText("Categoria: " + categoriaValue); //
+                marca.setText("Marca: " + marcaValue);
+
+                // Mostrar imagen
+                try {
+                    URL url = new URL(urlImagen);
+                    Image image = ImageIO.read(url);
+                    ImageIcon icon = new ImageIcon(image.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+                    img.setIcon(icon);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("No se encontró el producto con ProductID " + productId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCategoryButtonClick(String productId, JLabel titulo, JLabel precio, JLabel categoria, JLabel marca, JLabel img) {
+        try {
+            configureProduct(productId, titulo, precio, categoria, marca, img);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
