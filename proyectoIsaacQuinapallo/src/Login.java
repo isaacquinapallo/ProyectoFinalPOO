@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// ana.gomez@gmail.com          Contrasena456
 public class Login {
     public JPanel mainPanel;
     private JTextField textField1;
@@ -59,7 +60,7 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 String email = textField1.getText();
                 String password = new String(passwordField1.getPassword());
-                // ana.gomez@gmail.com          Contrasena456
+
                 Document query = new Document("Correo", email).append("Contrasena", password);
                 Document user = collection.find(query).first();
 

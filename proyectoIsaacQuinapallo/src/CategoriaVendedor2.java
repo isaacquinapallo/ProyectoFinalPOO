@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoriaVendedor2 {
     public JPanel mainPanel;
     private JLabel imagenProducto;
-    private JButton comprarButton;
+    private JButton añadirCarritoButton;
     private JComboBox<String> colorbox;
     private JComboBox<String> tamanobox;
     private JLabel nombretxt;
@@ -24,6 +24,7 @@ public class CategoriaVendedor2 {
     private JLabel inventariotxt;
     private JLabel descripciontxt;
     private JLabel reseñastxt;
+    private JSpinner cantidadSpinner;
 
     private MongoDatabase database;
     private MongoCollection<Document> collection;
@@ -41,6 +42,10 @@ public class CategoriaVendedor2 {
             // Añadir ActionListener a los JComboBox
             colorbox.addActionListener(e -> updateProductDetails(tituloProducto));
             tamanobox.addActionListener(e -> updateProductDetails(tituloProducto));
+
+            // Añadir ActionListener al botón comprar
+            añadirCarritoButton.addActionListener(e -> handleComprarButton(tituloProducto));
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -138,9 +143,9 @@ public class CategoriaVendedor2 {
             String selectedColor = (String) colorbox.getSelectedItem();
             String selectedSize = (String) tamanobox.getSelectedItem();
 
-            // Imprimir los valores seleccionados para depuración
-            System.out.println("Color seleccionado: " + selectedColor);
-            System.out.println("Tamaño seleccionado: " + selectedSize);
+            if (selectedColor == null || selectedSize == null) {
+                return; // Si no hay selección, no hacer nada
+            }
 
             // Convertir tamaño a entero
             int size = Integer.parseInt(selectedSize);
@@ -150,13 +155,11 @@ public class CategoriaVendedor2 {
                     .append("Color", selectedColor)
                     .append("Tamano", size); // Asegurar que Tamano es un entero
 
-            // Imprimir el filtro para depuración
-            System.out.println("Filtro de búsqueda: " + filter.toJson());
-
             Document product = collection.find(filter).first();
 
             if (product != null) {
                 // Establecer detalles del producto
+                String productId = getStringOrDefault(product, "ProductID");
                 String nombre = getStringOrDefault(product, "Nombre");
                 String marcaValue = getStringOrDefault(product, "Marca");
                 String categoriaValue = getStringOrDefault(product, "Categoria");
@@ -204,19 +207,84 @@ public class CategoriaVendedor2 {
                     imagenProducto.setText("Imagen no disponible");
                 }
             } else {
-                System.out.println("No se encontró el producto con los filtros seleccionados.");
+                System.out.println("No se encontró el producto con los criterios especificados");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void handleComprarButton(String tituloProducto) {
+        try {
+            int cantidad = (Integer) cantidadSpinner.getValue();
 
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona una cantidad válida.", "Cantidad inválida", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String selectedColor = (String) colorbox.getSelectedItem();
+            String selectedSize = (String) tamanobox.getSelectedItem();
+
+            if (selectedColor == null || selectedSize == null) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un color y un tamaño.", "Selección incompleta", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int size = Integer.parseInt(selectedSize);
+
+            Document filter = new Document("Nombre", tituloProducto)
+                    .append("Color", selectedColor)
+                    .append("Tamano", size);
+
+            Document product = collection.find(filter).first();
+
+            if (product != null) {
+                int inventarioActual = product.getInteger("Inventario", 0);
+                if (inventarioActual < cantidad) {
+                    JOptionPane.showMessageDialog(null, "No hay suficiente inventario para la cantidad seleccionada.", "Inventario insuficiente", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    // Nueva Pestaña
+                    try {
+                        // Obtener el ProductID
+                        String productId = getStringOrDefault(product, "ProductID");
+
+                        // Calcular el total
+                        Double precio = product.getDouble("Precio");
+                        double total = cantidad * precio;
+
+                        // Obtener la colección carrito
+                        MongoCollection<Document> carritoCollection = database.getCollection("carrito");
+
+                        // Crear el documento para el carrito
+                        Document carritoItem = new Document("ProductID", productId)
+                                .append("Cantidad", cantidad)
+                                .append("Total", total);
+
+                        // Insertar el documento en la colección carrito
+                        carritoCollection.insertOne(carritoItem);
+
+                        // Cambiar el texto del botón a "Artículo Añadido!"
+                        añadirCarritoButton.setText("Artículo Añadido!");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error al agregar al carrito: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Producto no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al procesar la compra: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private String getStringOrDefault(Document document, String key) {
         Object value = document.get(key);
         if (value == null) {
-            return null;
+            return "No disponible"; // Ajustar para que no retorne null
         }
         if (value instanceof String) {
             return (String) value;
@@ -224,3 +292,4 @@ public class CategoriaVendedor2 {
         return value.toString(); // Convierte a String si es otro tipo
     }
 }
+
