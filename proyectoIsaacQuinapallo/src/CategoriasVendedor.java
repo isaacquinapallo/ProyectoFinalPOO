@@ -34,6 +34,8 @@ public class CategoriasVendedor {
     private JLabel categoria3;
     private JLabel marca3;
     private JButton comprarButton3;
+    private JMenuItem Carrito;
+    private JMenuItem NotaDeVenta;
     private static MongoDatabase database;
     private static MongoCollection<Document> collection;
 
@@ -140,6 +142,18 @@ public class CategoriasVendedor {
                 frameForm3.setContentPane(formInstance.mainPanel);
                 frameForm3.pack();
                 frameForm3.setVisible(true);
+            }
+        });
+        Carrito.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Crear y mostrar la ventana para Carrito
+                JFrame frameForm4 = new JFrame("Carrito");
+                Carrito carrito = new Carrito();
+                frameForm4.setContentPane(carrito.mainPanel);
+                frameForm4.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frameForm4.pack();
+                frameForm4.setVisible(true);
             }
         });
     }
