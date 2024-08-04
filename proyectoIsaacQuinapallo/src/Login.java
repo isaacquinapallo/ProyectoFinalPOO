@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-    // ana.gomez@gmail.com          Contrasena456
+// ana.gomez@gmail.com          Contrasena456
 public class Login {
     public JPanel mainPanel;
     private JTextField textField1;

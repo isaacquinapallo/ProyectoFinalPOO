@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="mongodb-jdbc-2.1.4-all">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/mysql-connector-j-9.0.0/mongodb-jdbc-2.1.4-all.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/proyectoIsaacQuinapallo/librerias/mongodb-jdbc-2.1.4-all.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

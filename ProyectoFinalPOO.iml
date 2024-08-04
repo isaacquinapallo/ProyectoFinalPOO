@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mongodb-jdbc-2.1.4-all" level="project" />
+    <orderEntry type="library" name="itextpdf-5.5.13.4" level="project" />
   </component>
 </module>
