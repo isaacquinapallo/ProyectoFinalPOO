@@ -221,13 +221,4 @@ public class Carrito {
         frameNotaDeVenta.pack();
         frameNotaDeVenta.setVisible(true);
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Carrito");
-        Carrito carrito = new Carrito();
-        frame.setContentPane(carrito.mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
