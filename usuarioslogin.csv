@@ -1,4 +1,4 @@
-UserID,Correo,Contrasena,Nombre,Apellido,Direccion,Telefono,FechaRegistro,UltimoInicioSesion
+UserID,Correo,Contrasena,Nombre,Apellido,Direccion,Telefono,FechaRegistro,UltimaCompra
 1,juan.perez@gmail.com,Contrasena123,Juan,Perez,"Calle Falsa 123, Ciudad",555-1234,2024-07-24,2024-07-24
 2,ana.gomez@gmail.com,Contrasena456,Ana,Gomez,"Avenida Siempre Viva 742, Ciudad",555-5678,2024-07-23,2024-07-23
 3,maria.rodriguez@gmail.com,Contrasena789,Maria,Rodriguez,"Calle 456, Ciudad",555-8765,2024-07-22,2024-07-22

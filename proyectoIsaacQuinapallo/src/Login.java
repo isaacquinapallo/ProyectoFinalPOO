@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 // ana.gomez@gmail.com          Contrasena456
 public class Login {
@@ -59,6 +62,8 @@ public class Login {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = textField1.getText();
+                System.out.println("Email obtenido de textField1: " + email);
+                //Creas un archivo local con el nombre de usuarioActual en el cual vas a enviar el correo obtenido
                 String password = new String(passwordField1.getPassword());
 
                 Document query = new Document("Correo", email).append("Contrasena", password);
@@ -67,11 +72,20 @@ public class Login {
                 if (user != null) {
                     Integer userID = user.getInteger("UserID");
 
+                    // Guardar el correo en un archivo local
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter("usuarioActual.txt"))) {
+                        writer.write(email);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error al guardar el correo en el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                     JFrame frameForm2 = new JFrame(userID != null && userID == 1 ? "Opciones Admin" : "Opciones Cajero");
                     if (userID != null && userID == 1) {
                         IngresoAdmin formInstance = new IngresoAdmin();
                         frameForm2.setContentPane(formInstance.mainPanel);
                     } else {
+                        // Dentro de la clase Login, cuando quieras abrir NotaDeVenta
                         CategoriasVendedor formInstance = new CategoriasVendedor();
                         frameForm2.setContentPane(formInstance.mainPanel);
                     }
@@ -100,4 +114,5 @@ public class Login {
         fondoPanel.add(main, BorderLayout.CENTER);
         return fondoPanel;
     }
+
 }

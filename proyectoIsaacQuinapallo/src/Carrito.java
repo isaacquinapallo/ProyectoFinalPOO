@@ -213,11 +213,10 @@ public class Carrito {
         }
     }
 
-
     private void mostrarNotaDeVenta() {
         // Crear y mostrar la ventana para NotaDeVenta
         JFrame frameNotaDeVenta = new JFrame("Nota de Venta");
-        NotaDeVenta notaDeVenta = new NotaDeVenta(this); // Pasar la instancia de Carrito
+        NotaDeVenta notaDeVenta = new NotaDeVenta(this); // Inicialmente, no pasamos el email
         frameNotaDeVenta.setContentPane(notaDeVenta.mainPanel);
         frameNotaDeVenta.pack();
         frameNotaDeVenta.setVisible(true);
