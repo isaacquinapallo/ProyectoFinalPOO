@@ -139,28 +139,48 @@ public class Carrito {
             }
 
             Document filtro = new Document("ProductID", productID);
-            Document producto = carritoCollection.find(filtro).first();
+            Document productoEnCarrito = carritoCollection.find(filtro).first();
+            Document producto = productosCollection.find(filtro).first();
 
             if (producto != null) {
-                if (nuevaCantidad == 0) {
-                    carritoCollection.deleteOne(filtro);
-                } else {
-                    double precioUnitario = producto.getDouble("Total") / producto.getInteger("Cantidad");
-                    double nuevoTotal = nuevaCantidad * precioUnitario;
+                if (productoEnCarrito != null) {
+                    // El producto ya está en el carrito, actualizar la cantidad
+                    if (nuevaCantidad == 0) {
+                        carritoCollection.deleteOne(filtro);
+                    } else {
+                        double precioUnitario = productoEnCarrito.getDouble("Total") / productoEnCarrito.getInteger("Cantidad");
+                        double nuevoTotal = nuevaCantidad * precioUnitario;
 
-                    Document update = new Document("$set", new Document("Cantidad", nuevaCantidad).append("Total", nuevoTotal));
-                    carritoCollection.updateOne(filtro, update);
+                        Document update = new Document("$set", new Document("Cantidad", nuevaCantidad).append("Total", nuevoTotal));
+                        carritoCollection.updateOne(filtro, update);
+                    }
+                } else {
+                    // El producto no está en el carrito, añadirlo
+                    if (nuevaCantidad > 0) {
+                        double precioUnitario = producto.getDouble("Precio"); // Suponiendo que tienes un campo "Precio" en productos
+                        double total = nuevaCantidad * precioUnitario;
+
+                        Document nuevoItem = new Document("ProductID", productID)
+                                .append("Cantidad", nuevaCantidad)
+                                .append("Total", total);
+                        carritoCollection.insertOne(nuevoItem);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor que 0 para añadir un nuevo producto al carrito.", "Cantidad inválida", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
 
                 loadCarritoData();
+                calcularTotalPagar(); // Calcular el total después de añadir o editar un producto
+
             } else {
-                JOptionPane.showMessageDialog(null, "Producto no encontrado en el carrito.", "Producto no encontrado", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Producto no encontrado en la colección de productos.", "Producto no encontrado", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al editar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void calcularTotalPagar() {
         try {
