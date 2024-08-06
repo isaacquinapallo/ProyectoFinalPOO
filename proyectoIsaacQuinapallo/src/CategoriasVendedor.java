@@ -35,7 +35,6 @@ public class CategoriasVendedor {
     private JLabel marca3;
     private JButton comprarButton3;
     private JMenuItem Carrito;
-    private JMenuItem NotaDeVenta;
     private static MongoDatabase database;
     private static MongoCollection<Document> collection;
 

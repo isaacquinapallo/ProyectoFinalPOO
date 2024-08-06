@@ -203,15 +203,22 @@ public class NotaDeVenta {
 
     // Agregar datos del vendedor al PDF
     private void addSellerDataToPDF(Document document) {
+        // Obtener el UserID desde el archivo
+        String email = readUserEmail();
         try {
+            // Buscar el usuario en la colección "userslogin" por su correo electrónico
             org.bson.Document userLogin = database.getCollection("userslogin")
                     .find(new org.bson.Document("Correo", email))
                     .first();
+
+            // Verificar si se encontraron datos del usuario
             if (userLogin != null) {
                 document.add(new Paragraph("Correo: " + email));
                 document.add(new Paragraph("Nombre: " + userLogin.getString("Nombre")));
                 document.add(new Paragraph("Apellido: " + userLogin.getString("Apellido")));
                 document.add(new Paragraph("Teléfono: " + userLogin.getString("Telefono")));
+
+                // Actualizar la fecha de la última venta
                 updateLastSaleDate();
             } else {
                 document.add(new Paragraph("No se encontraron datos para el correo: " + email));
