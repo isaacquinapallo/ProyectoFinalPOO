@@ -259,13 +259,14 @@ public class AdminEditarProductos {
             String nombre = JOptionPane.showInputDialog("Ingrese el Nombre:");
             String marca = JOptionPane.showInputDialog("Ingrese la Marca:");
             String categoria = JOptionPane.showInputDialog("Ingrese la Categoria:");
-            String tamano = JOptionPane.showInputDialog("Ingrese el Tamano:");
+
+            int tamano = obtenerValorEntero("Ingrese el Tamano:");
             String color = JOptionPane.showInputDialog("Ingrese el Color:");
-            double precio = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el Precio:"));
-            int inventario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el Inventario:"));
+            double precio = obtenerValorDecimal("Ingrese el Precio:");
+            int inventario = obtenerValorEntero("Ingrese el Inventario:");
             String descripcion = JOptionPane.showInputDialog("Ingrese la Descripcion:");
             String urlImagen = JOptionPane.showInputDialog("Ingrese la URL de la Imagen:");
-            double calificacion = Double.parseDouble(JOptionPane.showInputDialog("Ingrese la Calificacion:"));
+            double calificacion = obtenerValorDecimal("Ingrese la Calificacion:");
 
             // Crear un nuevo documento para el producto
             Document nuevoProducto = new Document("ProductID", productID)
@@ -286,11 +287,32 @@ public class AdminEditarProductos {
             JOptionPane.showMessageDialog(null, "Producto añadido correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             loadProductosData(); // Recargar los datos de la tabla
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Error en el formato de los datos numéricos: " + e.getMessage(), "Error de formato", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al añadir el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private int obtenerValorEntero(String mensaje) {
+        while (true) {
+            try {
+                String input = JOptionPane.showInputDialog(mensaje);
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Error: Debe ingresar un valor entero.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private double obtenerValorDecimal(String mensaje) {
+        while (true) {
+            try {
+                String input = JOptionPane.showInputDialog(mensaje);
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Error: Debe ingresar un valor decimal.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 }
