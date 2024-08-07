@@ -20,7 +20,7 @@ public class AdminEditarProductos {
     private JLabel descripcionImagen;
     private JButton añadirButton;
     private JLabel descripcionAñadidoModificadoTxt;
-    private JButton gregarProductosButton;
+    private JButton gregarProductosNuevosButton; // Botón para añadir nuevos productos
 
     private MongoDatabase database;
     private MongoCollection<Document> productosCollection;
@@ -34,7 +34,7 @@ public class AdminEditarProductos {
             productosCollection = database.getCollection("productos");
             respaldoCollection = database.getCollection("respaldo");
 
-            // Verificar y copiar datos a la colección respaldo si es necesario
+            // Verificar y copiar datos a la colección respaldo si está vacía
             verificarYCopiarRespaldo();
 
             // Cargar datos de productos
@@ -64,6 +64,9 @@ public class AdminEditarProductos {
             // Configurar botón de añadir
             añadirButton.addActionListener(e -> añadirProducto());
 
+            // Configurar botón de añadir nuevos productos
+            gregarProductosNuevosButton.addActionListener(e -> agregarNuevoProducto());
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -72,34 +75,24 @@ public class AdminEditarProductos {
 
     private void verificarYCopiarRespaldo() {
         try {
+            // Verificar si la colección respaldo está vacía
             long count = respaldoCollection.countDocuments();
 
             if (count == 0) {
-                // La colección respaldo está vacía, copiar datos de productos
-                List<Document> productosItems = productosCollection.find().into(new ArrayList<>());
-
-                if (!productosItems.isEmpty()) {
-                    // Añadir la fecha actual a cada documento
-                    for (Document producto : productosItems) {
-                        producto.append("fecha", new Date());
-                    }
-                    respaldoCollection.insertMany(productosItems);
-                }
+                // La colección respaldo está vacía, copiar datos de productos y añadir fecha actual
+                copiarDatosConFechaActual();
             } else {
-                // Eliminar documentos que hayan pasado más de 24 horas
-                long ahora = System.currentTimeMillis();
-                long veinticuatroHoras = 86400000L; // 24 horas en milisegundos
-                respaldoCollection.deleteMany(new Document("fecha", new Document("$lt", new Date(ahora - veinticuatroHoras))));
+                // La colección respaldo no está vacía, verificar la fecha
+                Document últimoDocumento = respaldoCollection.find().sort(new Document("fecha", -1)).first();
+                if (últimoDocumento != null) {
+                    Date fechaÚltimaCopia = últimoDocumento.getDate("fecha");
+                    long diferenciaHoras = (new Date().getTime() - fechaÚltimaCopia.getTime()) / (1000 * 60 * 60);
 
-                // Copiar los datos actuales de productos a la colección respaldo
-                List<Document> productosItems = productosCollection.find().into(new ArrayList<>());
-
-                if (!productosItems.isEmpty()) {
-                    // Añadir la fecha actual a cada documento
-                    for (Document producto : productosItems) {
-                        producto.append("fecha", new Date());
+                    if (diferenciaHoras >= 24) {
+                        // Han pasado más de 24 horas, eliminar la colección y copiar datos de productos
+                        respaldoCollection.drop();
+                        copiarDatosConFechaActual();
                     }
-                    respaldoCollection.insertMany(productosItems);
                 }
             }
         } catch (Exception e) {
@@ -108,13 +101,34 @@ public class AdminEditarProductos {
         }
     }
 
+    private void copiarDatosConFechaActual() {
+        try {
+            // Obtener datos de productos
+            List<Document> productosItems = productosCollection.find().into(new ArrayList<>());
+
+            if (!productosItems.isEmpty()) {
+                // Añadir la fecha actual a cada documento
+                Date fechaActual = new Date();
+                for (Document producto : productosItems) {
+                    producto.append("fecha", fechaActual);
+                }
+
+                // Insertar documentos en la colección respaldo
+                respaldoCollection.insertMany(productosItems);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al copiar datos con fecha actual a la colección respaldo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void loadProductosData() {
         try {
             List<Document> productosItems = productosCollection.find().into(new ArrayList<>());
 
             // Crear las columnas para la tabla
-            String[] columnNames = {"ProductID", "Nombre", "Marca", "Color", "Inventario"};
-            Object[][] data = new Object[productosItems.size()][5];
+            String[] columnNames = {"ProductID", "Nombre", "Marca", "Categoria", "Tamano", "Color", "Precio", "Inventario", "Descripcion", "URLImagen", "Calificacion"};
+            Object[][] data = new Object[productosItems.size()][11];
 
             // Rellenar los datos de la tabla
             for (int i = 0; i < productosItems.size(); i++) {
@@ -122,8 +136,14 @@ public class AdminEditarProductos {
                 data[i][0] = item.getString("ProductID");
                 data[i][1] = item.getString("Nombre");
                 data[i][2] = item.getString("Marca");
-                data[i][3] = item.getString("Color");
-                data[i][4] = item.getInteger("Inventario");
+                data[i][3] = item.getString("Categoria");
+                data[i][4] = item.getInteger("Tamano");
+                data[i][5] = item.getString("Color");
+                data[i][6] = item.getDouble("Precio");
+                data[i][7] = item.getInteger("Inventario");
+                data[i][8] = item.getString("Descripcion");
+                data[i][9] = item.getString("URLImagen");
+                data[i][10] = item.getDouble("Calificacion");
             }
 
             // Actualizar la tabla con los datos
@@ -227,6 +247,47 @@ public class AdminEditarProductos {
             }
 
             loadProductosData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al añadir el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void agregarNuevoProducto() {
+        try {
+            String productID = JOptionPane.showInputDialog("Ingrese el ProductID:");
+            String nombre = JOptionPane.showInputDialog("Ingrese el Nombre:");
+            String marca = JOptionPane.showInputDialog("Ingrese la Marca:");
+            String categoria = JOptionPane.showInputDialog("Ingrese la Categoria:");
+            String tamano = JOptionPane.showInputDialog("Ingrese el Tamano:");
+            String color = JOptionPane.showInputDialog("Ingrese el Color:");
+            double precio = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el Precio:"));
+            int inventario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el Inventario:"));
+            String descripcion = JOptionPane.showInputDialog("Ingrese la Descripcion:");
+            String urlImagen = JOptionPane.showInputDialog("Ingrese la URL de la Imagen:");
+            double calificacion = Double.parseDouble(JOptionPane.showInputDialog("Ingrese la Calificacion:"));
+
+            // Crear un nuevo documento para el producto
+            Document nuevoProducto = new Document("ProductID", productID)
+                    .append("Nombre", nombre)
+                    .append("Marca", marca)
+                    .append("Categoria", categoria)
+                    .append("Tamano", tamano)
+                    .append("Color", color)
+                    .append("Precio", precio)
+                    .append("Inventario", inventario)
+                    .append("Descripcion", descripcion)
+                    .append("URLImagen", urlImagen)
+                    .append("Calificacion", calificacion);
+
+            // Insertar el nuevo producto en la colección
+            productosCollection.insertOne(nuevoProducto);
+
+            JOptionPane.showMessageDialog(null, "Producto añadido correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            loadProductosData(); // Recargar los datos de la tabla
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error en el formato de los datos numéricos: " + e.getMessage(), "Error de formato", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al añadir el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
