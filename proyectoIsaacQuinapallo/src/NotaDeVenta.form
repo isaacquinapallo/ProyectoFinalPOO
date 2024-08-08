@@ -13,7 +13,9 @@
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-15329252"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="3c957" class="javax.swing.JLabel">
@@ -21,6 +23,7 @@
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Arial Black" size="16"/>
               <text value="Generador de Notas de Venta"/>
             </properties>
           </component>
@@ -29,6 +32,8 @@
               <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-5328716"/>
+              <font name="Arial Black" size="14"/>
               <text value="Generar Nota de Venta con Cedula Actual"/>
             </properties>
           </component>
@@ -37,6 +42,8 @@
               <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-5328716"/>
+              <font name="Arial Black" size="14"/>
               <text value="Crear nuevo Cliente"/>
             </properties>
           </component>
@@ -45,6 +52,8 @@
               <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-5328716"/>
+              <font name="Arial Black" size="14"/>
               <text value="Generar Sin Cliente Registrado"/>
             </properties>
           </component>
@@ -61,6 +70,7 @@
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Arial" size="14"/>
               <text value="Buscar Cliente "/>
             </properties>
           </component>
@@ -69,6 +79,7 @@
               <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Arial" size="14"/>
               <text value="Ingresar el Numero de Cedula del Cliente"/>
             </properties>
           </component>
@@ -167,6 +178,7 @@
               <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Arial Black" size="12"/>
               <text value="Otras Opciones:"/>
             </properties>
           </component>
