@@ -1,3 +1,5 @@
+ URL DE MANUAL DE USUARIO: 
+ https://youtu.be/Pn0yschfBiQ
  Proyecto de Gestión para Tienda de Zapatos
 
  Descripción
