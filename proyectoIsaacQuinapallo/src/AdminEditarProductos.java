@@ -255,17 +255,17 @@ public class AdminEditarProductos {
 
     private void agregarNuevoProducto() {
         try {
-            String productID = JOptionPane.showInputDialog("Ingrese el ProductID:");
-            String nombre = JOptionPane.showInputDialog("Ingrese el Nombre:");
-            String marca = JOptionPane.showInputDialog("Ingrese la Marca:");
-            String categoria = JOptionPane.showInputDialog("Ingrese la Categoria:");
+            String productID = obtenerProductID();
+            String nombre = obtenerValorNoVacio("Ingrese el Nombre:");
+            String marca = obtenerValorNoVacio("Ingrese la Marca:");
+            String categoria = obtenerValorNoVacio("Ingrese la Categoria:");
 
             int tamano = obtenerValorEntero("Ingrese el Tamano:");
-            String color = JOptionPane.showInputDialog("Ingrese el Color:");
+            String color = obtenerValorNoVacio("Ingrese el Color:");
             double precio = obtenerValorDecimal("Ingrese el Precio:");
             int inventario = obtenerValorEntero("Ingrese el Inventario:");
-            String descripcion = JOptionPane.showInputDialog("Ingrese la Descripcion:");
-            String urlImagen = JOptionPane.showInputDialog("Ingrese la URL de la Imagen:");
+            String descripcion = obtenerValorNoVacio("Ingrese la Descripcion:");
+            String urlImagen = obtenerValorNoVacio("Ingrese la URL de la Imagen:");
             double calificacion = obtenerValorDecimal("Ingrese la Calificacion:");
 
             // Crear un nuevo documento para el producto
@@ -293,11 +293,46 @@ public class AdminEditarProductos {
         }
     }
 
+    private String obtenerProductID() {
+        while (true) {
+            String input = JOptionPane.showInputDialog("Ingrese el ProductID:");
+            if (input == null || input.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Error: El ProductID no puede estar vacío.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            } else if (!input.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$")) {
+                JOptionPane.showMessageDialog(null, "Error: El ProductID debe contener al menos una letra y un número.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            } else if (productIDExists(input)) {
+                JOptionPane.showMessageDialog(null, "Error: El ProductID ya existe. Por favor ingrese uno diferente.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            } else {
+                return input;
+            }
+        }
+    }
+
+    private boolean productIDExists(String productID) {
+        Document query = new Document("ProductID", productID);
+        return productosCollection.find(query).iterator().hasNext();
+    }
+
+    private String obtenerValorNoVacio(String mensaje) {
+        while (true) {
+            String input = JOptionPane.showInputDialog(mensaje);
+            if (input == null || input.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Error: Este campo no puede estar vacío.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            } else {
+                return input;
+            }
+        }
+    }
+
     private int obtenerValorEntero(String mensaje) {
         while (true) {
             try {
                 String input = JOptionPane.showInputDialog(mensaje);
-                return Integer.parseInt(input);
+                if (input == null || input.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Error: Este campo no puede estar vacío.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    return Integer.parseInt(input);
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Error: Debe ingresar un valor entero.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             }
@@ -308,7 +343,11 @@ public class AdminEditarProductos {
         while (true) {
             try {
                 String input = JOptionPane.showInputDialog(mensaje);
-                return Double.parseDouble(input);
+                if (input == null || input.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Error: Este campo no puede estar vacío.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    return Double.parseDouble(input);
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Error: Debe ingresar un valor decimal.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             }

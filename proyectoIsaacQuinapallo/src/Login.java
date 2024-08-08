@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 //Como Administrador
-// juan.perez@gmail.com         Contrasena123
+//juan.perez@gmail.com         Contrasena123
 
 //Como Vendedor
 // ana.gomez@gmail.com          Contrasena456
