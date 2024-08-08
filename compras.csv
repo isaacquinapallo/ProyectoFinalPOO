@@ -1,0 +1,4 @@
+_id,CompraID,UserID,ClienteID,ProductID,Cantidad,Total,FechaCompra
+66b16c86f631db6af14eb631,1,pedro.sanchez@gmail.com,1234567890,6A,4,599.96,2024-08-06T00:21:26.854Z
+66b186051566c13420e59d48,2,sofia.castillo@gmail.com,1234567890,7C,3,240,2024-08-06T02:10:13.106Z
+66b186051566c13420e59d49,2,sofia.castillo@gmail.com,1234567890,4I,1,130,2024-08-06T02:10:13.114Z

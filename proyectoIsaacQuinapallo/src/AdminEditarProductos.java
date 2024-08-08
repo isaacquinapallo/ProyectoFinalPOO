@@ -21,6 +21,7 @@ public class AdminEditarProductos {
     private JButton añadirButton;
     private JLabel descripcionAñadidoModificadoTxt;
     private JButton gregarProductosNuevosButton; // Botón para añadir nuevos productos
+    private JButton EliminarProductosbutton;
 
     private MongoDatabase database;
     private MongoCollection<Document> productosCollection;
@@ -66,6 +67,10 @@ public class AdminEditarProductos {
 
             // Configurar botón de añadir nuevos productos
             gregarProductosNuevosButton.addActionListener(e -> agregarNuevoProducto());
+
+            // Configurar botón de eliminar productos
+            EliminarProductosbutton.addActionListener(e -> eliminarProducto());
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -353,5 +358,37 @@ public class AdminEditarProductos {
             }
         }
     }
+
+    private void eliminarProducto() {
+        // Mostrar el cuadro de diálogo para ingresar el ProductID
+        String productID = JOptionPane.showInputDialog("Ingrese el ProductID que desea eliminar:");
+
+        if (productID == null || productID.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Error: El ProductID no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Mostrar cuadro de confirmación
+        int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar el producto con ProductID: " + productID + "?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            try {
+                // Eliminar el producto de la colección
+                Document filtro = new Document("ProductID", productID);
+                long resultado = productosCollection.deleteOne(filtro).getDeletedCount();
+
+                if (resultado > 0) {
+                    JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    loadProductosData(); // Recargar los datos de la tabla
+                } else {
+                    JOptionPane.showMessageDialog(null, "Producto no encontrado.", "Producto no encontrado", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al eliminar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 
 }

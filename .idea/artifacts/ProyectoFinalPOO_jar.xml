@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ProyectoFinalPOO:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ProyectoFinalPOO_jar</output-path>
+    <root id="archive" name="ProyectoFinalPOO.jar">
+      <element id="module-output" name="ProyectoFinalPOO" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/proyectoIsaacQuinapallo/librerias/mongodb-jdbc-2.1.4-all.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/proyectoIsaacQuinapallo/librerias/itextpdf-5.5.13.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

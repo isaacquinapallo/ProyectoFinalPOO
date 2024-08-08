@@ -1,0 +1,6 @@
+Cedula,Nombre,Apellido,CorreoElectronico,Telefono,Direccion,Ciudad,CodigoPostal,FechaRegistro
+1234567890,Juan,Pérez,juan.perez@example.com,555-1234,Calle Falsa 123,Queretaro,76000,2023-01-15
+1234567891,Ana,Gómez,ana.gomez@example.com,555-5678,Avenida Siempre Viva 742,México D.F.,01000,2023-02-20
+1234567892,Carlos,Lopez,carlos.lopez@example.com,555-8765,Calle Luna 456,Monterrey,64000,2023-03-12
+1234567893,María,Fernández,maria.fernandez@example.com,555-4321,Av. del Sol 789,Guadalajara,44100,2023-04-18
+1234567894,Laura,Martínez,laura.martinez@example.com,555-9876,Calle Nueva 321,San Luis Potosí,78000,2023-05-22
