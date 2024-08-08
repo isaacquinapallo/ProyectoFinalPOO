@@ -13,16 +13,17 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AdminVerVentasVendedores {
+    // Elementos de la interfaz gráfica
     public JPanel mainPanel;
-    private JTable tablaGeneral;
-    private JTextField busquedaField;
-    private JButton buscarCompraButton;
-    private JTable tablaEspecifica;
-    private JLabel confirmacionCompra;
-    private JTextField busquedafield2;
-    private JButton buscarButton2;
+    private JTable tablaGeneral; // Tabla para mostrar datos generales de compras
+    private JTextField busquedaField; // Campo de texto para buscar por CompraID
+    private JButton buscarCompraButton; // Botón para buscar por CompraID
+    private JTable tablaEspecifica; // Tabla para mostrar datos específicos de una compra
+    private JLabel confirmacionCompra; // Etiqueta para mostrar mensajes de confirmación o error
+    private JTextField busquedafield2; // Campo de texto para buscar por UserID
+    private JButton buscarButton2; // Botón para buscar por UserID
 
-    private MongoCollection<Document> comprasCollection;
+    private MongoCollection<Document> comprasCollection; // Colección de compras en MongoDB
 
     public AdminVerVentasVendedores() {
         // Conectar a la base de datos MongoDB
@@ -72,6 +73,7 @@ public class AdminVerVentasVendedores {
         // Mapas para almacenar los datos procesados
         Map<Integer, Map<String, Object>> datosMap = new HashMap<>();
 
+        // Formateador de fecha
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // Procesar los datos
@@ -85,6 +87,7 @@ public class AdminVerVentasVendedores {
             Date fechaCompra = doc.getDate("FechaCompra");
             String fechaCompraStr = dateFormat.format(fechaCompra);
 
+            // Acumulación de datos para cada CompraID
             if (datosMap.containsKey(compraID)) {
                 Map<String, Object> datos = datosMap.get(compraID);
                 datos.put("Cantidad", (int) datos.get("Cantidad") + cantidad);
@@ -121,6 +124,7 @@ public class AdminVerVentasVendedores {
     }
 
     private void buscarYMostrarCompra() {
+        // Obtener el CompraID ingresado por el usuario
         String compraIDBuscadaStr = busquedaField.getText().trim();
         if (compraIDBuscadaStr.isEmpty()) {
             confirmacionCompra.setText("Por favor, ingrese un CompraID.");
@@ -142,6 +146,7 @@ public class AdminVerVentasVendedores {
         DefaultTableModel model = (DefaultTableModel) tablaEspecifica.getModel();
         model.setRowCount(0); // Limpia las filas existentes
 
+        // Formateador de fecha
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         boolean encontrado = false;
@@ -150,6 +155,7 @@ public class AdminVerVentasVendedores {
             Date fechaCompra = doc.getDate("FechaCompra");
             String fechaCompraStr = dateFormat.format(fechaCompra);
 
+            // Agregar datos a la tabla específica
             Object[] rowData = {
                     doc.getInteger("CompraID"),
                     doc.getString("UserID"),
@@ -170,6 +176,7 @@ public class AdminVerVentasVendedores {
     }
 
     private void buscarYMostrarPorUserID() {
+        // Obtener el UserID ingresado por el usuario
         String userIDBuscado = busquedafield2.getText().trim();
         if (userIDBuscado.isEmpty()) {
             confirmacionCompra.setText("Por favor, ingrese un UserID.");
@@ -183,6 +190,7 @@ public class AdminVerVentasVendedores {
         DefaultTableModel model = (DefaultTableModel) tablaEspecifica.getModel();
         model.setRowCount(0); // Limpia las filas existentes
 
+        // Formateador de fecha
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         boolean encontrado = false;
@@ -191,6 +199,7 @@ public class AdminVerVentasVendedores {
             Date fechaCompra = doc.getDate("FechaCompra");
             String fechaCompraStr = dateFormat.format(fechaCompra);
 
+            // Agregar datos a la tabla específica
             Object[] rowData = {
                     doc.getInteger("CompraID"),
                     doc.getString("UserID"),
@@ -208,15 +217,5 @@ public class AdminVerVentasVendedores {
         } else {
             confirmacionCompra.setText("No se encontraron compras para el UserID especificado.");
         }
-    }
-
-    public static void main(String[] args) {
-        // Crear y mostrar la ventana principal
-        JFrame frame = new JFrame("Admin Ver Ventas Vendedores");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        AdminVerVentasVendedores adminVerVentasVendedores = new AdminVerVentasVendedores();
-        frame.setContentPane(adminVerVentasVendedores.mainPanel);
-        frame.setSize(1000, 600); // Ajusta el tamaño para acomodar los nuevos componentes
-        frame.setVisible(true);
     }
 }

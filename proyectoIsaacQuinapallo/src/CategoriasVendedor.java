@@ -199,12 +199,16 @@ public class CategoriasVendedor {
         }
     }
 
+    // Método para manejar el clic en el botón de categoría
     private void handleCategoryButtonClick(String productId, JLabel titulo, JLabel precio, JLabel categoria, JLabel marca, JLabel img) {
         try {
+            // Llama al método configureProduct para configurar los detalles del producto
             configureProduct(productId, titulo, precio, categoria, marca, img);
         } catch (Exception e) {
+            // Imprime el stack trace del error en la consola para depuración
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

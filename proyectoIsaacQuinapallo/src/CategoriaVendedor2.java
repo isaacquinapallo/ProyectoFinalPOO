@@ -12,41 +12,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaVendedor2 {
-    public JPanel mainPanel;
-    private JLabel imagenProducto;
-    private JButton añadirCarritoButton;
-    private JComboBox<String> colorbox;
-    private JComboBox<String> tamanobox;
-    private JLabel nombretxt;
-    private JLabel marcatxt;
-    private JLabel categoriatxt;
-    private JLabel preciotxt;
-    private JLabel inventariotxt;
-    private JLabel descripciontxt;
-    private JLabel reseñastxt;
-    private JSpinner cantidadSpinner;
+    public JPanel mainPanel; // Panel principal de la interfaz
+    private JLabel imagenProducto; // Etiqueta para mostrar la imagen del producto
+    private JButton añadirCarritoButton; // Botón para añadir el producto al carrito
+    private JComboBox<String> colorbox; // ComboBox para seleccionar el color del producto
+    private JComboBox<String> tamanobox; // ComboBox para seleccionar el tamaño del producto
+    private JLabel nombretxt; // Etiqueta para mostrar el nombre del producto
+    private JLabel marcatxt; // Etiqueta para mostrar la marca del producto
+    private JLabel categoriatxt; // Etiqueta para mostrar la categoría del producto
+    private JLabel preciotxt; // Etiqueta para mostrar el precio del producto
+    private JLabel inventariotxt; // Etiqueta para mostrar el inventario del producto
+    private JLabel descripciontxt; // Etiqueta para mostrar la descripción del producto
+    private JLabel reseñastxt; // Etiqueta para mostrar la calificación del producto
+    private JSpinner cantidadSpinner; // Spinner para seleccionar la cantidad del producto
 
-    private MongoDatabase database;
-    private MongoCollection<Document> collection;
+    private MongoDatabase database; // Base de datos MongoDB
+    private MongoCollection<Document> collection; // Colección de productos en MongoDB
 
     public CategoriaVendedor2(String tituloProducto) {
         try {
-            // Inicializar MongoDB
+            // Inicializa la conexión a MongoDB
             var mongoClient = MongoClients.create("mongodb://localhost:27017");
             database = mongoClient.getDatabase("proyectoIsaacQuinapallo");
             collection = database.getCollection("productos");
 
-            // Buscar el producto por el título
+            // Configura el producto basándose en el título proporcionado
             configureProductByTitle(tituloProducto);
 
-            // Añadir ActionListener a los JComboBox
+            // Añade ActionListener a los JComboBox para actualizar detalles del producto al seleccionar un color o tamaño
             colorbox.addActionListener(e -> updateProductDetails(tituloProducto));
             tamanobox.addActionListener(e -> updateProductDetails(tituloProducto));
 
-            // Añadir ActionListener al botón comprar
+            // Añade ActionListener al botón de añadir al carrito
             añadirCarritoButton.addActionListener(e -> handleComprarButton(tituloProducto));
 
         } catch (Exception e) {
+            // Captura y muestra errores al conectar con la base de datos
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -54,18 +55,18 @@ public class CategoriaVendedor2 {
 
     private void configureProductByTitle(String titulo) {
         try {
-            // Buscar los productos con el mismo nombre en la base de datos
+            // Busca los productos con el nombre especificado en la base de datos
             List<Document> products = collection.find(new Document("Nombre", titulo)).into(new ArrayList<>());
 
             if (!products.isEmpty()) {
-                // Listas para colores y tamaños
+                // Listas para almacenar colores y tamaños únicos
                 List<String> colores = new ArrayList<>();
                 List<String> tamanos = new ArrayList<>();
 
-                // Tomar el primer producto para detalles generales
+                // Tomar el primer producto de la lista para los detalles generales
                 Document firstProduct = products.get(0);
 
-                // Establecer detalles generales
+                // Establecer detalles generales del producto
                 String nombre = getStringOrDefault(firstProduct, "Nombre");
                 String marcaValue = getStringOrDefault(firstProduct, "Marca");
                 String categoriaValue = getStringOrDefault(firstProduct, "Categoria");
@@ -85,7 +86,7 @@ public class CategoriaVendedor2 {
                     }
                 }
 
-                // Verificar que los valores no sean nulos antes de asignar a los JLabels
+                // Actualizar las etiquetas con los detalles del producto
                 nombretxt.setText(nombre != null ? nombre : "No disponible");
                 preciotxt.setText(precioValue != null ? "Precio: $" + String.format("%.2f", precioValue) : "Precio: No disponible");
                 categoriatxt.setText(categoriaValue != null ? "Categoria: " + categoriaValue : "Categoria: No disponible");
@@ -94,7 +95,7 @@ public class CategoriaVendedor2 {
                 reseñastxt.setText(calificacion != null ? "Calificación: " + calificacion : "Calificación: No disponible");
                 inventariotxt.setText(inventarioValue);
 
-                // Obtener todos los colores y tamaños únicos
+                // Obtener todos los colores y tamaños únicos de los productos encontrados
                 for (Document product : products) {
                     String color = getStringOrDefault(product, "Color");
                     String tamano = getStringOrDefault(product, "Tamano");
@@ -107,11 +108,11 @@ public class CategoriaVendedor2 {
                     }
                 }
 
-                // Configurar JComboBoxes
+                // Configurar los JComboBox con los colores y tamaños obtenidos
                 colorbox.setModel(new DefaultComboBoxModel<>(colores.toArray(new String[0])));
                 tamanobox.setModel(new DefaultComboBoxModel<>(tamanos.toArray(new String[0])));
 
-                // Mostrar imagen
+                // Mostrar la imagen del producto
                 if (urlImagen != null && !urlImagen.isEmpty()) {
                     try {
                         URL url = new URL(urlImagen);
@@ -123,6 +124,7 @@ public class CategoriaVendedor2 {
                             imagenProducto.setText("Imagen no disponible");
                         }
                     } catch (IOException e) {
+                        // Captura y muestra errores al cargar la imagen
                         e.printStackTrace();
                         imagenProducto.setText("Error al cargar la imagen");
                     }
@@ -133,13 +135,13 @@ public class CategoriaVendedor2 {
                 System.out.println("No se encontró el producto con el título " + titulo);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Captura y muestra errores generales
         }
     }
 
     private void updateProductDetails(String titulo) {
         try {
-            // Obtener el color y tamaño seleccionados
+            // Obtener el color y tamaño seleccionados en los JComboBox
             String selectedColor = (String) colorbox.getSelectedItem();
             String selectedSize = (String) tamanobox.getSelectedItem();
 
@@ -147,7 +149,7 @@ public class CategoriaVendedor2 {
                 return; // Si no hay selección, no hacer nada
             }
 
-            // Convertir tamaño a entero
+            // Convertir el tamaño a entero
             int size = Integer.parseInt(selectedSize);
 
             // Buscar el producto con el nombre, color y tamaño seleccionados
@@ -158,7 +160,7 @@ public class CategoriaVendedor2 {
             Document product = collection.find(filter).first();
 
             if (product != null) {
-                // Establecer detalles del producto
+                // Actualizar detalles del producto basado en la selección
                 String productId = getStringOrDefault(product, "ProductID");
                 String nombre = getStringOrDefault(product, "Nombre");
                 String marcaValue = getStringOrDefault(product, "Marca");
@@ -179,7 +181,7 @@ public class CategoriaVendedor2 {
                     }
                 }
 
-                // Verificar que los valores no sean nulos antes de asignar a los JLabels
+                // Actualizar las etiquetas con los detalles del producto
                 nombretxt.setText(nombre != null ? nombre : "No disponible");
                 preciotxt.setText(precioValue != null ? "Precio: $" + String.format("%.2f", precioValue) : "Precio: No disponible");
                 categoriatxt.setText(categoriaValue != null ? "Categoria: " + categoriaValue : "Categoria: No disponible");
@@ -188,7 +190,7 @@ public class CategoriaVendedor2 {
                 reseñastxt.setText(calificacion != null ? "Calificación: " + calificacion : "Calificación: No disponible");
                 inventariotxt.setText(inventarioValue);
 
-                // Mostrar imagen
+                // Mostrar la imagen del producto
                 if (urlImagen != null && !urlImagen.isEmpty()) {
                     try {
                         URL url = new URL(urlImagen);
@@ -200,6 +202,7 @@ public class CategoriaVendedor2 {
                             imagenProducto.setText("Imagen no disponible");
                         }
                     } catch (IOException e) {
+                        // Captura y muestra errores al cargar la imagen
                         e.printStackTrace();
                         imagenProducto.setText("Error al cargar la imagen");
                     }
@@ -210,7 +213,7 @@ public class CategoriaVendedor2 {
                 System.out.println("No se encontró el producto con los criterios especificados");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Captura y muestra errores generales
         }
     }
 
@@ -244,7 +247,7 @@ public class CategoriaVendedor2 {
                 if (inventarioActual < cantidad) {
                     JOptionPane.showMessageDialog(null, "No hay suficiente inventario para la cantidad seleccionada.", "Inventario insuficiente", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    // Nueva Pestaña
+                    // Crear el documento para añadir al carrito
                     try {
                         // Obtener el ProductID
                         String productId = getStringOrDefault(product, "ProductID");
@@ -268,6 +271,7 @@ public class CategoriaVendedor2 {
                         añadirCarritoButton.setText("Artículo Añadido!");
 
                     } catch (Exception e) {
+                        // Captura y muestra errores al agregar al carrito
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Error al agregar al carrito: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -276,11 +280,13 @@ public class CategoriaVendedor2 {
                 JOptionPane.showMessageDialog(null, "Producto no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
+            // Captura y muestra errores generales al procesar la compra
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al procesar la compra: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    // Método auxiliar para obtener valores del documento, retornando un valor por defecto si es null
     private String getStringOrDefault(Document document, String key) {
         Object value = document.get(key);
         if (value == null) {
@@ -292,4 +298,3 @@ public class CategoriaVendedor2 {
         return value.toString(); // Convierte a String si es otro tipo
     }
 }
-
